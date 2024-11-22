@@ -1,0 +1,26 @@
+.btns2 a{
+    color:#21b1e1;
+    text-decoration: none;
+    padding:5px;
+    background-color: #19445d;
+    margin: 1px;
+    padding-inline: 9px;
+
+}
+.btns2{
+    overflow: scroll;
+    display: flex;
+ 
+    width:fit-content;
+}
+
+.btns2 a.active{
+    color:#1fcbff;
+    text-decoration: none;
+    padding:5px;
+    background-color: yellow;
+    background-image: linear-gradient(to top,#078dab,#19445d);
+    margin: 1px;
+    font-weight: bolder;
+    text-shadow:3px 2px rgba(89, 85, 85, 0.418);
+}

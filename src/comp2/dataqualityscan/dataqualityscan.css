@@ -1,0 +1,14 @@
+.eventdate{
+color: #0067d9;
+}
+.count{
+    color:#d8b603;
+}
+.action a{
+    background: rgb(1, 1, 84);
+    background-image: linear-gradient(to bottom,rgb(193, 191, 191),rgba(72, 69, 69, 0.564));
+    padding: 5px;
+    text-decoration: none;
+    color: white;
+    border-radius: 5px;
+}

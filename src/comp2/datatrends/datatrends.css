@@ -1,0 +1,81 @@
+.choosedataset a{
+    color:#0993ad;
+    border-radius:20px;
+    padding:5px;
+    padding-inline:12px;
+    font-size:12px;
+    font-weight: 550;
+    text-decoration:none;
+    border:1px solid #0992ad3f;
+    background:#0992ad1c;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.choosedataset a:hover{
+    color:#0993ad;
+    border-radius:20px;
+    padding:5px;
+    padding-inline:12px;
+    font-size:12px;
+    text-decoration:none;
+    border:1px solid #0992ad62;
+    background:#0992ad00
+}
+.choosedataset a.active{
+    color:black;
+    border-radius:20px;
+    padding:5px;
+    padding-inline:12px;
+    font-size:12px;
+    text-decoration:none;
+    border:1px solid #0993ad;
+    background:#0992ad;
+    
+}
+.choosedataset{
+    border: 3px solid #0992ad5c;
+    padding:10px;
+    border-radius: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+
+
+
+}
+
+p{
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+}
+.graphbtn a{
+    padding: 10px;
+    width: auto;
+    min-width: 10px;
+    background-color: rgb(15, 162, 211);
+    background-image: linear-gradient(to bottom,rgb(199, 195, 195),rgba(128, 128, 128, 0.711));
+    margin-left:1px;
+    border-radius: 5px;
+    font-weight: 600;
+    text-decoration: none;
+    max-width: 100px;
+    text-align: center;
+    font-size: small;
+    color: black;
+    font-family:Arial, Helvetica, sans-serif
+     
+}
+.graphbtn{
+    display: flex;
+    position: absolute;
+    gap: 10px;
+    margin-top: 20px;
+    margin-left: 600px;
+    z-index: 10;
+
+}
+.choosedataset svg{
+    z-index: -10;
+   
+   
+   }

@@ -1,0 +1,27 @@
+.eventmanage button{
+    padding: 5px;
+    background-color: rgb(15, 162, 211);;
+    background-image: linear-gradient(to bottom,#b5b1aa,#a8a39bb4 );
+    border-radius: 5px;
+    font-weight:bold;
+}
+.eventmanage button:hover{
+    background: rgb(4, 184, 4);
+
+
+}
+
+.dataset:hover{
+ color:#0165b6;
+
+}
+.dataset{
+    color:lightgrey;
+   
+   }
+table {
+    border-collapse: collapse;
+  }
+tr{
+    border-bottom: 1px solid lightgrey;
+}

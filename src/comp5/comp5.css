@@ -1,0 +1,48 @@
+
+.ops button{
+    background-color: transparent;
+    border-color: transparent;
+    color: #ee0909;
+}
+.searcher{
+    background-color: transparent;
+    color:lightgrey;
+    border-color:#233148;
+    
+    border-radius: 2px;
+}
+.btn1{
+    background-color: #e31b2f;
+    padding:5px;
+    color:white;
+    border-radius: 5px;
+}
+.btn1:hover{
+    background-color: #dc3546c6;
+    padding:5px;
+    color:white;
+    border-radius: 5px;
+}
+.btn2{
+    background-color: #22b845;
+    padding:5px;
+    color:white;
+    border-radius: 5px;
+}
+.btn2:hover{
+    background-color: #22b845bf;
+    padding:5px;
+    color:white;
+    border-radius: 5px;
+}
+.confidence div{
+    padding-top: 6px;
+    padding-bottom:6px ;
+    background-color:#c2ae2d;
+    color:white;
+    border-radius: 5px;
+    font-size: 10px;
+}
+.rows:hover{
+    background-color: black;
+}

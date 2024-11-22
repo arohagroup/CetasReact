@@ -1,0 +1,177 @@
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.main.pannel {
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-row-gap: 90px;
+    padding: 0px;
+}
+
+.alert.overview {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.alert .title {
+    font-weight: bold;
+    padding: 30px 0px 10px 0px;
+    text-transform: uppercase;
+    border-bottom: 3px solid #2c5551;
+}
+
+.alert .graph-box {
+    font-size: 1px;
+    margin: 30px 0px 0px 0px;
+    width: 200px;
+    height: 410px;
+    border-radius: 20px;
+    background-color: #171728;
+}
+
+.incedent.overview {
+    padding-left: 20px;
+    padding-right: 0px;
+    display: flex;
+    column-gap: 10px;
+}
+
+.entity .svg-box {
+    display: flex;
+    align-items: flex-start;
+}
+
+.entity .svg-box svg {
+    margin-top: 0px;
+    margin-left: 0px;
+    padding: 10px;
+}
+
+.graph1 .title {
+    font-weight: bold;
+    padding: 10px;
+    text-transform: uppercase;
+    border-bottom: 3px solid #2c5551;
+}
+
+.riskoverview {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.riskoverview .title {
+    padding: 10px;
+    text-transform: uppercase;
+    border-bottom: 3px solid #2c5551;
+}
+
+.datarealted.stuff {
+    display: flex;
+    column-gap: 2px;
+}
+
+.dataoverview,
+.dataquality,
+.datacorrel {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.dataoverview .graph {
+    height: 480px;
+    width: 130px;
+}
+
+.dataquality .graph {
+    height: 480px;
+    width: 150px;
+}
+
+.datacorrel .graph {
+    height: 480px;
+    width: 150px;
+}
+
+.Notifications {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.Notifications svg {
+    padding: 10px;
+}
+
+rect {
+    rx: 20;
+    ry: 20;
+}
+
+rect[fill="lightgrey"] {
+    opacity: 0.2;
+}
+
+rect[fill="none"] {
+    opacity: 0.1;
+}
+
+.icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.icon-container img {
+    width: 50px;
+    height: 50px;
+}
+
+h1,
+h2,
+h3 {
+    font-size: 1.5rem;
+    color: #fff;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin: 10px 0;
+}
+
+.title-light-grey {
+    color: lightgrey;
+}
+
+.title-dark-grey {
+    color: #171728;
+}
+
+text {
+    fill: white;
+    font-size: 13px;
+}
+
+path {
+    stroke: lightgrey;
+    stroke-width: 5;
+    opacity: 0.5;
+}
+
+button {
+    background-color: #2c5551;
+    color: white;
+    font-size: 14px;
+    border-radius: 5px;
+    padding: 8px 15px;
+    border: none;
+    cursor: pointer;
+    margin-right: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+button:hover {
+    background-color: #1a3c36;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.3);
+}
