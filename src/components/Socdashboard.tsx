@@ -7,7 +7,7 @@ import host from "../images/TimelineIcons/HOST.svg";
 import { useNavigate } from "react-router-dom";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-import DashboardService from './services/dashboardservices';  // Importing the service
+import DashboardService from './API/dashboardservices';  // Importing the service
 
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement);
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import CryptoJS from 'crypto-js';
-import { useLoginService } from './API/loginService'; // Replace with actual service
+import { useLoginService } from '../../components/API/loginService'; // Replace with actual service
 import { UtilProvider, useUtilService } from './utilService'; // Replace with actual utility
 import { environment } from './environment'; // Replace with your environment config
 

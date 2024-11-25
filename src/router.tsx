@@ -27,7 +27,7 @@ import Comp10 from "./comp10/comp10";
 import Comp11 from "./comp11/comp11";
 import Comp12 from "./comp12/comp12";
 import Comp13 from "./comp13/comp13";
-import SsoLandingPage from "./components/services/SsoLandingPage";
+import SsoLandingPage from "./core/services/SsoLandingPage";
 import Login from "./components/login/login";
 
 
@@ -37,7 +37,8 @@ export const router = createBrowserRouter([
     element: <Layout />,
     children: [
       
-      { path: "/", element: <SsoLandingPage /> },
+      { path: "", element: <SsoLandingPage /> },
+      { path: "/dashboard", element: <Socdashboard /> },
       { path: "/SOCDashboard", element: <Socdashboard /> },
       { path: "/data", element: <Data /> },
       { path: "/Cisodashboard", element: <Cisodashboard /> },
@@ -63,9 +64,9 @@ export const router = createBrowserRouter([
       { path: "/comp11", element: <Comp11 /> },
       { path: "/comp12", element: <Comp12 /> },
       { path: "/comp13", element: <Comp13 /> },
-      { path: "/login", element: <Login /> },
     ],
   },
+  { path: "/login", element: <Login /> },
   // {
   //   path: "/login", 
   //   element: <App />  

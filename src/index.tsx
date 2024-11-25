@@ -4,7 +4,7 @@ import './styles/App.css';
 
 import { RouterProvider } from 'react-router-dom';
 import { router } from './router';
-import { UtilProvider } from './components/services/utilService';
+import { UtilProvider } from './core/services/utilService';
 
 
 

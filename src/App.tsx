@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { FaUser, FaLock } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import './styles/App.css'; 
+import { useUtilService } from "./core/services/utilService";
+
 
 function App() {
   const [theme, setTheme] = useState<string>('dark'); 
   const navigate = useNavigate();
+  const location = useLocation();
+  const { currentUserProfile, setProfile, isMenuOpened, setMenuStatus } = useUtilService();
+
 
   
   const toggleTheme = () => {
@@ -15,7 +20,9 @@ function App() {
  
   useEffect(() => {
     document.body.className = theme;
-  }, [theme]);
+    window.localStorage.setItem('ActiveURL', location.pathname);
+
+  }, [theme, location]);
 
   return (
     <div className={`App ${theme}-theme`}>

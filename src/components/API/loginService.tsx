@@ -1,7 +1,7 @@
-import axios from 'axios';
+import { axiosInstance } from '../../core/services/addToken';
 import * as CryptoJS from 'crypto-js';
 import { useState } from 'react';
-import { environment as env } from '../environment';
+import { environment as env } from '../../core/services/environment';
 
 // You can replace this with your environment values or define them elsewhere.
 const environment = {
@@ -28,7 +28,7 @@ export const useLoginService = () => {
   const getTwoFactorAuthStatus = async () => {
     const url = `${environment.serverUrl}/v1/user/2faEnabled`;
     try {
-      const response = await axios.get(url);
+      const response = await axiosInstance.get(url);
       return response.data;
     } catch (error) {
       console.error('Error getting 2FA status:', error);
@@ -53,7 +53,7 @@ export const useLoginService = () => {
     const url = `${environment.serverUrl}/oauth/token?grant_type=password&username=${encryptedUsername}&password=${encryptedPassword}&token=${loginData.token}`;
     
     try {
-      const response = await axios.post(url);
+      const response = await axiosInstance.post(url);
       return response.data;
     } catch (error) {
       console.error('Error logging in:', error);
@@ -70,7 +70,7 @@ export const useLoginService = () => {
   const getProfile = async () => {
     const url = `${environment.serverUrl}/licenses/getAllLicenses`;
     try {
-      const response = await axios.get(url);
+      const response = await axiosInstance.get(url);
       return response.data;
     } catch (error) {
       console.error('Error fetching profile:', error);
@@ -86,7 +86,7 @@ export const useLoginService = () => {
 
       if (accessToken && refreshToken) {
         try {
-          await axios.delete(`${environment.serverUrl}/removeTokens`, {
+          await axiosInstance.delete(`${environment.serverUrl}/removeTokens`, {
             headers: {
               accessToken: accessToken,
               refreshToken: refreshToken,
@@ -111,7 +111,7 @@ export const useLoginService = () => {
     const refreshToken = localStorage.getItem('refreshToken');
     if (refreshToken) {
       try {
-        const response = await axios.post(
+        const response = await axiosInstance.post(
           `${environment.serverUrl}/oauth/token?grant_type=refresh_token&refresh_token=${refreshToken}`
         );
         return response.data;
@@ -128,7 +128,7 @@ export const useLoginService = () => {
   const getAllUsers = async () => {
     const url = `${environment.serverUrl}/v1/user/getAllUsers`;
     try {
-      const response = await axios.get(url);
+      const response = await axiosInstance.get(url);
       return response.data;
     } catch (error) {
       console.error('Error fetching all users:', error);
@@ -140,7 +140,7 @@ export const useLoginService = () => {
   const getSecreteKey = async (username: string) => {
     const url = `${environment.serverUrl}/v1/user/getsecretekey/${username}/`;
     try {
-      const response = await axios.get(url);
+      const response = await axiosInstance.get(url);
       return response.data;
     } catch (error) {
       console.error('Error fetching secret key:', error);
@@ -152,7 +152,7 @@ export const useLoginService = () => {
   const getLoggedInUserDetails = async () => {
     const url = `${environment.serverUrl}/v1/user/getLoggedinUser`;
     try {
-      const response = await axios.get(url);
+      const response = await axiosInstance.get(url);
       return response.data;
     } catch (error) {
       console.error('Error fetching logged-in user details:', error);
@@ -164,7 +164,7 @@ export const useLoginService = () => {
   const getSSOloginInfo = async (data: any) => {
     const url = `${environment.serverUrl}/v1/sso/auth/verifyUser`;
     try {
-      const response = await axios.post(url, data);
+      const response = await axiosInstance.post(url, data);
       return response.data;
     } catch (error) {
       console.error('Error during SSO login:', error);
@@ -176,7 +176,7 @@ export const useLoginService = () => {
   const getSSDemoDetails = async () => {
     const url = `${environment.serverUrl}/v1/entity/ssd`;
     try {
-      const response = await axios.get(url);
+      const response = await axiosInstance.get(url);
       return response.data;
     } catch (error) {
       console.error('Error fetching SS demo details:', error);
@@ -188,7 +188,7 @@ export const useLoginService = () => {
   const markNotificationAsRead = async (incId: string) => {
     const url = `${environment.serverUrl}/v1/incident/notification/markasread/${incId}`;
     try {
-      const response = await axios.get(url);
+      const response = await axiosInstance.get(url);
       return response.data;
     } catch (error) {
       console.error('Error marking notification as read:', error);

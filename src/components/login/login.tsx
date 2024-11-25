@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 // import axios from 'axios';
 import CryptoJS from 'crypto-js';
 import { TextField, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import { environment } from '../services/environment';  // Assuming the API_KEY and API_CIPHER are in this file
-import { useLoginService } from '../services/API/loginService';  // Create a service to handle login requests
+import { environment } from '../../core/services/environment';  // Assuming the API_KEY and API_CIPHER are in this file
+import { useLoginService } from '../API/loginService';  // Create a service to handle login requests
 import './login.css';
 
 const Login = () => {
@@ -55,7 +55,9 @@ const Login = () => {
 
     try {
       const loginResponse = await login({ username, password, token });
-      const { access_token, refresh_token } = loginResponse.data;
+      console.log(loginResponse)
+      const { access_token, refresh_token } = loginResponse;
+      console.log(access_token, refresh_token)
 
       // Store tokens in localStorage
       localStorage.setItem('accessToken', access_token);
@@ -64,28 +66,31 @@ const Login = () => {
 
       // Get user profile
       const profileResponse = await getProfile();
-      const decryptedLicenseName = CryptoJS.AES.decrypt(profileResponse.data.licenseName, API_KEY, API_CIPHER).toString(CryptoJS.enc.Utf8);
+      const decryptedLicenseName = CryptoJS.AES.decrypt(profileResponse[0].licenseName, API_KEY, API_CIPHER).toString(CryptoJS.enc.Utf8);
 
+      console.log(decryptedLicenseName)
       localStorage.setItem('profile', decryptedLicenseName);
       localStorage.setItem('activeDashboard', decryptedLicenseName.substring(0, 3));
 
       // Navigate based on permissions
       const userDetails = await getLoggedInUserDetails();
-      localStorage.setItem('userRoles', JSON.stringify(userDetails.roles));
-      localStorage.setItem('userPermissions', JSON.stringify(userDetails.permissions));
+
+      console.log(userDetails)
+      localStorage.setItem('userRoles', JSON.stringify(userDetails.distinctRoles[0]));
+      localStorage.setItem('userPermissions', JSON.stringify(userDetails.distinctPermissions));
 
       const isActiveURL = localStorage.getItem('ActiveURL');
       const redirectURL = localStorage.getItem('redirectURL');
-      const permissions = userDetails.permissions;
+      const permissions = userDetails.distinctPermissions;
 
-      if (isActiveURL && isActiveURL !== '/login') {
+      if (isActiveURL && isActiveURL !== '/SOCDashboard') {
         navigate(isActiveURL);
       } else if (redirectURL && permissions.includes('Dashboard_Control')) {
         navigate(redirectURL);
       } else {
         // Default redirect if permissions are valid
         if (permissions.includes('Dashboard_Control')) {
-          navigate('/dashboard');
+          navigate('/SOCDashboard');
         } else {
           setIsError(true);
         }
