@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-// import axios from 'axios';
 import CryptoJS from 'crypto-js';
 import { TextField, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import { environment } from '../../core/services/environment';  // Assuming the API_KEY and API_CIPHER are in this file
-import { useLoginService } from '../API/loginService';  // Create a service to handle login requests
+import { environment } from '../../core/services/environment';
+import { useLoginService } from '../API/loginService';
 import './login.css';
 
 const Login = () => {
@@ -17,35 +16,30 @@ const Login = () => {
   const [isError, setIsError] = useState(false);
   const [isTokenError, setIsTokenError] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const {
-    setSecurityTokenInput,
     getTwoFactorAuthStatus,
     login,
     getProfile,
-    logout,
-    refreshAuthToken,
-    getAllUsers,
     getSecreteKey,
     getLoggedInUserDetails,
-    getSSOloginInfo,
-    getSSDemoDetails,
-    markNotificationAsRead} = useLoginService()
+  } = useLoginService();
 
   const API_KEY = environment.API_KEY;
   const API_CIPHER = environment.API_CIPHER;
 
+  // Check 2FA status on mount
   useEffect(() => {
-    // Check 2FA status on component mount
     getTwoFactorAuthStatus().then((res: any) => {
       if (res.status) {
         setShowSecurityTokenInput(true);
       }
     });
-  }, [username]);
+  }, []);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!token && showSecurityTokenInput) {
@@ -53,53 +47,44 @@ const Login = () => {
       return;
     }
 
+    setIsLoading(true); // Set loading state during login
+
     try {
       const loginResponse = await login({ username, password, token });
-      console.log(loginResponse)
       const { access_token, refresh_token } = loginResponse;
-      console.log(access_token, refresh_token)
 
-      // Store tokens in localStorage
+      // Store tokens
       localStorage.setItem('accessToken', access_token);
       localStorage.setItem('refreshToken', refresh_token);
       localStorage.setItem('username', username);
 
-      // Get user profile
+      // Fetch and store profile details
       const profileResponse = await getProfile();
-      const decryptedLicenseName = CryptoJS.AES.decrypt(profileResponse[0].licenseName, API_KEY, API_CIPHER).toString(CryptoJS.enc.Utf8);
+      const decryptedLicenseName = CryptoJS.AES.decrypt(
+        profileResponse[0].licenseName,
+        API_KEY,
+        API_CIPHER
+      ).toString(CryptoJS.enc.Utf8);
 
-      console.log(decryptedLicenseName)
       localStorage.setItem('profile', decryptedLicenseName);
       localStorage.setItem('activeDashboard', decryptedLicenseName.substring(0, 3));
 
-      // Navigate based on permissions
+      // Fetch user roles and permissions
       const userDetails = await getLoggedInUserDetails();
-
-      console.log(userDetails)
-      localStorage.setItem('userRoles', JSON.stringify(userDetails.distinctRoles[0]));
-      localStorage.setItem('userPermissions', JSON.stringify(userDetails.distinctPermissions));
-
-      const isActiveURL = localStorage.getItem('ActiveURL');
-      const redirectURL = localStorage.getItem('redirectURL');
       const permissions = userDetails.distinctPermissions;
 
-      if (isActiveURL && isActiveURL !== '/SOCDashboard') {
-        navigate(isActiveURL);
-      } else if (redirectURL && permissions.includes('Dashboard_Control')) {
-        navigate(redirectURL);
-      } else {
-        // Default redirect if permissions are valid
-        if (permissions.includes('Dashboard_Control')) {
-          navigate('/SOCDashboard');
-        } else {
-          setIsError(true);
-        }
-      }
+      localStorage.setItem('userRoles', JSON.stringify(userDetails.distinctRoles[0]));
+      localStorage.setItem('userPermissions', JSON.stringify(permissions));
+
+      // Navigate to the dashboard
+      navigate('/dashboard', { replace: true }); // Ensures no back navigation to login
     } catch (error) {
       setIsError(true);
       if (showSecurityTokenInput) {
         openSecreteKeyPopup();
       }
+    } finally {
+      setIsLoading(false); // Reset loading state
     }
   };
 
@@ -119,7 +104,7 @@ const Login = () => {
         <TextField
           label="Username"
           value={username}
-          onChange={(e: any) => setUsername(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
           fullWidth
           required
           margin="normal"
@@ -128,7 +113,7 @@ const Login = () => {
           label="Password"
           type="password"
           value={password}
-          onChange={(e: any) => setPassword(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
           fullWidth
           required
           margin="normal"
@@ -137,7 +122,7 @@ const Login = () => {
           <TextField
             label="Security Token"
             value={token}
-            onChange={(e: any) => setToken(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setToken(e.target.value)}
             fullWidth
             margin="normal"
             error={isTokenError}
@@ -145,8 +130,13 @@ const Login = () => {
           />
         )}
         {isError && <div className="error-message">Login failed. Please try again.</div>}
-        <Button type="submit" variant="contained" color="primary">
-          Login
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          disabled={isLoading}
+        >
+          {isLoading ? 'Logging in...' : 'Login'}
         </Button>
       </form>
 

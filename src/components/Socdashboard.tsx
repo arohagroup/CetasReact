@@ -7,36 +7,24 @@ import host from "../images/TimelineIcons/HOST.svg";
 import { useNavigate } from "react-router-dom";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
+import { environment } from '../core/services/environment';
 import DashboardService from './API/dashboardservices';  // Importing the service
 
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement);
 
-const alertData = {
-  labels: ["Total Alerts", "Risky Alerts", ["Noisy", "Alerts(auto", "-suppressed)"], ["Noisy", "Alerts(Manually", "-suppressed)"]],
-  datasets: [
-    {
-      barThickness: 15,
-      categoryPercentage: 0.1,
-      data: [48300, 16400, 30400, 11111],
-      backgroundColor: ['red', 'blue', 'green', 'yellow'],
-      borderWidth: 1,
-    },
-  ],
-};
+// Type definition for alert data
+interface AlertData {
+  labels: (string | string[])[];  // Allow labels to be either strings or arrays of strings
+  datasets: Array<{
+    barThickness: number;
+    categoryPercentage: number;
+    data: number[];  // Data for the graph
+    backgroundColor: string[];  // Array of colors
+    borderWidth: number;
+  }>;
+}
 
-const incidentData = {
-  labels: [["Open", "Alerts"], ["True", "Positives"], ["False", "Positives"], ["Wrong", "Detections"]],
-  datasets: [
-    {
-      barThickness: 15,
-      categoryPercentage: 0.1,
-      data: [24, 30, 102, 229],
-      backgroundColor: ['red', 'blue', 'green', 'yellow'],
-      borderWidth: 1,
-    },
-  ],
-};
-
+// Chart options (customize as needed)
 const chartOptions: any = {
   indexAxis: 'y',
   plugins: {
@@ -58,28 +46,165 @@ const chartOptions: any = {
   },
 };
 
+// Incident data (hardcoded for now)
+interface IncidentData {
+  labels: (string | string[])[];  // Labels for the bar chart
+  datasets: Array<{
+    barThickness: number;
+    categoryPercentage: number;
+    data: number[];  // Data for the graph
+    backgroundColor: string[];  // Array of colors
+    borderWidth: number;
+  }>;
+}
+
+// Socdashboard Component (main dashboard)
 function Socdashboard() {
   const navigate = useNavigate();
   const [entityData, setEntityData] = useState({
-    highRiskUsers: 0,
+    highRiskUsers: 10,
     highRiskIPs: 0,
     highRiskHosts: 0,
   });
 
+  // State to store alert data (coming from the DashboardService)
+  const [alertData, setAlertData] = useState<AlertData>({
+    labels: [],
+    datasets: [
+      {
+        barThickness: 15,
+        categoryPercentage: 0.1,
+        data: [0, 0, 0, 0],  // Default values for data
+        backgroundColor: ['red', 'blue', 'green', 'yellow'],
+        borderWidth: 1,
+      },
+    ],
+  });
+  const [incidentData, setIncidentData] = useState<IncidentData>({
+    labels: [["Open", "Alerts"], ["True", "Positives"], ["False", "Positives"], ["Wrong", "Detections"]],
+    datasets: [
+      {
+        barThickness: 15,
+        categoryPercentage: 0.1,
+        data: [24, 30, 102, 229],
+        backgroundColor: ['red', 'blue', 'green', 'yellow'],
+        borderWidth: 1,
+      },
+    ],
+  });
+  
+
+
   useEffect(() => {
-    DashboardService.getDashboardCounts('all')
-      .then((data) => {
-        console.log(data);
-        // setEntityData({
-        //   highRiskUsers: data.highRiskUsers || 0,
-        //   highRiskIPs: data.highRiskIPs || 0,
-        //   highRiskHosts: data.highRiskHosts || 0,
-        // });
+    getAlertCounts();
+    getIncidentCounts();
+    getEntityCounts();
+  }, []);
+
+  // Fetch alert details from DashboardService
+  const getAlertCounts = () => {
+
+   DashboardService.getAlertDetails()
+      .then((res: any) => {
+        const {totalAlertCount, riskAlertCount, autoAlertCount, manualAlertCount}=res.data;
+        // const totalAlerts = res.data.totalAlertCount;
+        // const riskyAlerts = res.data.riskAlertCount;
+        // const noisyAutoSuppressed = res.data.autoAlertCount;
+        // const noisyManuallySuppressed = res.data.manualAlertCount;
+    //     "manualAlertCount": 111,
+    // "autoAlertCount": 30269,
+    // "riskAlertCount": 16211,
+    // "totalAlertCount": 46591
+    console.log(totalAlertCount, riskAlertCount, autoAlertCount, manualAlertCount)
+
+        const newAlertData = {
+          labels: [
+            'Total Alerts',
+            'Risky Alerts',
+            ['Noisy', 'Alerts(auto', '-suppressed)'],
+            ['Noisy', 'Alerts(Manually', '-suppressed)'],
+          ],
+          datasets: [
+            {
+              barThickness: 15,
+              categoryPercentage: 0.1,
+              data: [totalAlertCount, riskAlertCount, autoAlertCount, manualAlertCount],
+              backgroundColor: ['red', 'blue', 'green', 'yellow'],
+              borderWidth: 1,
+            },
+          ],
+        };
+
+        // Log to check data
+        console.log('Alert Data:', newAlertData); // Log data to check
+        setAlertData(newAlertData);
       })
+      .catch((error: unknown) => {
+        console.error('Error fetching alert details:', error);
+      });
+  }
+
+
+  const getIncidentCounts = () => {
+
+    DashboardService.getDashboardCounts('ALL')
+    // "totalTruePositivesCount": 102,
+    // "totalFalsePositivesCount": 30,
+    // "totalWrongDetectionsCount": 24,
+    // "actions": 229,
+
+      .then((res: any) => {
+        const { totalTruePositivesCount, totalFalsePositivesCount, totalWrongDetectionsCount, actions } = res.data;
+        console.log(actions, totalTruePositivesCount, totalFalsePositivesCount, totalWrongDetectionsCount)
+
+        const newIncidentData = {
+          labels: [
+            ['Open', 'Alerts'],
+            ['True', 'Positives'],
+            ['False', 'Positives'],
+            ['Wrong', 'Detections'],
+          ],
+          datasets: [
+            {
+              barThickness: 15,
+              categoryPercentage: 0.1,
+              data: [actions, totalTruePositivesCount, totalFalsePositivesCount, totalWrongDetectionsCount],
+              backgroundColor: ['red', 'blue', 'green', 'yellow'],
+              borderWidth: 1,
+            },
+          ],
+        };
+        setIncidentData(newIncidentData);
+      })
+      .catch((error: unknown) => {
+        console.error('Error fetching incident details:', error);
+      });
+  }
+
+
+  // Fetch entity data (e.g., high-risk users, IPs, hosts)
+  const getEntityCounts = () => {
+
+    DashboardService.getDashboardCounts('ALL')
+      .then((res: any) => {
+        
+        setEntityData({
+          highRiskUsers: res.data.highRiskUserCount,
+          highRiskIPs: res.data.highRiskIPCount,
+          highRiskHosts: res.data.highRiskHostnameCount,
+
+        });
+        
+      })
+      
+
+
       .catch((error: unknown) => {
         console.error("Error fetching entity overview data:", error);
       });
-  }, []);
+      
+  }
+  
 
   return (
     <div style={{ padding: "30px 0px 0px 80px", margin: "0px" }}>
@@ -87,9 +212,17 @@ function Socdashboard() {
       <div className="main-pannel" style={{ overflow: "hidden", display: "grid", gridTemplateColumns: "auto auto", gridRowGap: "90px", padding: "0px" }}>
         {/* Alert Overview */}
         <div className="alert-overview" style={{ paddingLeft: "20px", paddingRight: "20px" }}>
-          <div style={{ fontWeight: "bold", padding: "30px 0px 10px 0px", textTransform: "uppercase", borderBottom: "3px solid #2c5551" }}>ALERT OVERVIEW</div>
-          <div style={{ fontSize: "1px", margin: "30px 0px 0px 0px", width: "200px", height: "450px", borderRadius: "20px", backgroundColor: "#171728" }}>
-            <Bar data={alertData} options={chartOptions} />
+          <div>
+            <div style={{ fontWeight: "bold", padding: "30px 0px 10px 0px", textTransform: "uppercase", borderBottom: "3px solid #2c5551" }}>
+              ALERT OVERVIEW
+            </div>
+            <div style={{ fontSize: "1px", margin: "30px 0px 0px 0px", width: "200px", height: "450px", borderRadius: "20px", backgroundColor: "#171728" }}>
+              {alertData.datasets[0].data.length > 0 ? (
+                <Bar data={alertData} options={chartOptions} />
+              ) : (
+                <div>Loading...</div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -106,7 +239,9 @@ function Socdashboard() {
 
           {/* Entity Overview */}
           <div>
-            <div style={{ fontWeight: "bold", padding: "30px 0px 10px 0px", textTransform: "uppercase", borderBottom: "3px solid #2c5551", width: "380px" }}>ENTITY OVERVIEW</div>
+            <div style={{ fontWeight: "bold", padding: "30px 0px 10px 0px", textTransform: "uppercase", borderBottom: "3px solid #2c5551", width: "380px" }}>
+              ENTITY OVERVIEW
+            </div>
             <svg height={480} width={190} viewBox="0 0 190 480" style={{ margin: "20px 0px 0px 0px", padding: "10px" }}>
               <rect fill="lightgrey" opacity={0.1} height={440} width={190} rx={20} ry={20}></rect>
               <g>
@@ -134,7 +269,7 @@ function Socdashboard() {
                   <tspan dx={0}>High-Risk</tspan>
                   <tspan dx={-55.8} dy={20}>Hosts</tspan>
                 </text>
-                <image href={host} width={50} height={50} x={30} y={310} />
+                <image href={host} width={50} height={50} x={30} y={300} />
               </g>
             </svg>
           </div>

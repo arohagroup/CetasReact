@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Route } from "react-router-dom";
 import App from "./App";
 import Layout from "./layout/layout";
 import Data from "./data";
@@ -30,46 +30,58 @@ import Comp13 from "./comp13/comp13";
 import SsoLandingPage from "./core/services/SsoLandingPage";
 import Login from "./components/login/login";
 
+// PrivateRoute Component to handle authentication check
+const PrivateRoute = ({ children }: any) => {
+  const isAuthenticated = localStorage.getItem("accessToken");
+
+  if (!isAuthenticated) {
+    // Redirect them to login if not authenticated
+    return <Login />;
+  }
+
+  return children;
+};
 
 export const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <Layout />,
     children: [
-      
-      { path: "", element: <SsoLandingPage /> },
-      { path: "/dashboard", element: <Socdashboard /> },
-      { path: "/SOCDashboard", element: <Socdashboard /> },
-      { path: "/data", element: <Data /> },
-      { path: "/Cisodashboard", element: <Cisodashboard /> },
-      { path: "/Addcomponent", element: <Addcomponent /> },
-      { path: "/Customizeddashboard", element: <Customizeddashboard /> },
-      { path: "/Identity360dashboard", element: <Identity360dashboard /> },
-      { path: "/Riskdashboard", element: <Riskdashboard /> },
-      { path: "/Systemhealthdashboard", element: <Systemhealthdashboard /> },
-      { path: "/Threathunting", element: <Threathunting /> },
-      { path: "/dataops", element: <Dataops /> },
-      { path: "/datatrend", element: <Datatrend /> },
-      { path: "/dataqualityscan", element: <Dataqualityscan /> },
-      { path: "/dataqualityalerts", element: <Dataqualityalerts /> },
-      { path: "/dataqualityrules", element: <Dataqualityrules /> },
-      { path: "/comp3", element: <Comp3 /> },
-      { path: "/comp4", element: <Comp4 /> },
-      { path: "/comp5", element: <Comp5 /> },
-      { path: "/comp6", element: <Comp6 /> },
-      { path: "/comp7", element: <Comp7 /> },
-      { path: "/comp8", element: <Comp8 /> },
-      { path: "/comp9", element: <Comp9 /> },
-      { path: "/comp10", element: <Comp10 /> },
-      { path: "/comp11", element: <Comp11 /> },
-      { path: "/comp12", element: <Comp12 /> },
-      { path: "/comp13", element: <Comp13 /> },
+      // Protected Routes
+      { path: '', element: <PrivateRoute><Socdashboard />   </PrivateRoute>},
+      { path: '/dashboard', element: <PrivateRoute><Socdashboard /></PrivateRoute> },
+      { path: "/SOCDashboard", element: <PrivateRoute><Socdashboard /></PrivateRoute> },
+      { path: "/data", element: <PrivateRoute><Data /></PrivateRoute> },
+      { path: "/Cisodashboard", element: <PrivateRoute><Cisodashboard /></PrivateRoute> },
+      { path: "/Addcomponent", element: <PrivateRoute><Addcomponent /></PrivateRoute> },
+      { path: "/Customizeddashboard", element: <PrivateRoute><Customizeddashboard /></PrivateRoute> },
+      { path: "/Identity360dashboard", element: <PrivateRoute><Identity360dashboard /></PrivateRoute> },
+      { path: "/Riskdashboard", element: <PrivateRoute><Riskdashboard /></PrivateRoute> },
+      { path: "/Systemhealthdashboard", element: <PrivateRoute><Systemhealthdashboard /></PrivateRoute> },
+      { path: "/Threathunting", element: <PrivateRoute><Threathunting /></PrivateRoute> },
+      { path: "/dataops", element: <PrivateRoute><Dataops /></PrivateRoute> },
+      { path: "/datatrend", element: <PrivateRoute><Datatrend /></PrivateRoute> },
+      { path: "/dataqualityscan", element: <PrivateRoute><Dataqualityscan /></PrivateRoute> },
+      { path: "/dataqualityalerts", element: <PrivateRoute><Dataqualityalerts /></PrivateRoute> },
+      { path: "/dataqualityrules", element: <PrivateRoute><Dataqualityrules /></PrivateRoute> },
+      { path: "/comp3", element: <PrivateRoute><Comp3 /></PrivateRoute> },
+      { path: "/comp4", element: <PrivateRoute><Comp4 /></PrivateRoute> },
+      { path: "/comp5", element: <PrivateRoute><Comp5 /></PrivateRoute> },
+      { path: "/comp6", element: <PrivateRoute><Comp6 /></PrivateRoute> },
+      { path: "/comp7", element: <PrivateRoute><Comp7 /></PrivateRoute> },
+      { path: "/comp8", element: <PrivateRoute><Comp8 /></PrivateRoute> },
+      { path: "/comp9", element: <PrivateRoute><Comp9 /></PrivateRoute> },
+      { path: "/comp10", element: <PrivateRoute><Comp10 /></PrivateRoute> },
+      { path: "/comp11", element: <PrivateRoute><Comp11 /></PrivateRoute> },
+      { path: "/comp12", element: <PrivateRoute><Comp12 /></PrivateRoute> },
+      { path: "/comp13", element: <PrivateRoute><Comp13 /></PrivateRoute> },
     ],
   },
   { path: "/login", element: <Login /> },
-  // {
-  //   path: "/login", 
-  //   element: <App />  
-  // },
 ]);
 
+const RouterSetup = () => {
+  return <RouterProvider router={router} />;
+};
+
+export default RouterSetup;

@@ -25,6 +25,7 @@ const newMainURL = environment.newServerUrl;
 
 class DashboardService {
   
+  // const dashboardcountgeturl = `${environment.mainURL}/counts/all?duration=${duration}`;
 
 
   //dashboard-start//
